@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nextawk - WhatsApp Business Platform | Next IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --border: #2a2a3a;
+            --text-primary: #fafafa;
+            --text-secondary: #a0a0b0;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --cyan: #22d3ee;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --rose: #f43f5e;
+            --whatsapp: #25D366;
+            --saas: #10b981;
+            --onpre: #f59e0b;
+            --purple: #a855f7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100%;
+            height: 100dvh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px 100px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            visibility: hidden;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+            visibility: visible;
+        }
+
+        .slide-label {
+            font-size: 0.7em;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-light);
+            margin-bottom: 16px;
+        }
+
+        .slide-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .slide-title span {
+            background: linear-gradient(135deg, var(--accent-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 900px;
+            line-height: 1.7;
+        }
+
+        .slide-subtitle strong { color: var(--accent-light); }
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .slideCounter {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Cover */
+        .slide-cover {
+            text-align: center;
+            align-items: center;
+            background: #000000;
+        }
+
+        .cover-logo {
+            width: 300px;
+            height: 300px;
+            background: transparent;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+        }
+
+        .cover-logo img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            border-radius: 28px;
+        }
+
+        .cover-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .cover-tagline {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .cover-meta {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .cover-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--warning);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Grid layouts */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .data-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .data-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2em;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .data-value.accent { color: var(--accent-light); }
+        .data-value.cyan { color: var(--cyan); }
+        .data-value.success { color: var(--success); }
+        .data-value.warning { color: var(--warning); }
+        .data-value.rose { color: var(--rose); }
+        .data-value.whatsapp { color: var(--whatsapp); }
+        .data-value.saas { color: var(--saas); }
+        .data-value.onpre { color: var(--onpre); }
+        .data-value.purple { color: var(--purple); }
+
+        .data-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        /* Feature cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-glow);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h4 {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+
+        .feature-card p {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .feature-card.highlight {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-glow), var(--bg-card));
+        }
+
+        .feature-card.ai {
+            border-color: var(--purple);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), var(--bg-card));
+        }
+
+        /* Comparison grid */
+        .comp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .comp-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .comp-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .comp-tag {
+            font-size: 0.7em;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .comp-tag.weak {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--rose);
+        }
+
+        .comp-tag.good {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .comp-tag.neutral {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .comp-tag.best {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent-light);
+        }
+
+        /* Dual column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 32px;
+        }
+
+        .col-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .col-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .col-card ul {
+            list-style: none;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .col-card ul li::before {
+            content: '→';
+            color: var(--accent-light);
+            margin-right: 10px;
+        }
+
+        /* Pricing grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-glow), var(--bg-card));
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7em;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .pricing-badge.saas { background: var(--saas); }
+        .pricing-badge.onpre { background: var(--onpre); }
+
+        .pricing-price {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2em;
+            font-weight: 800;
+            color: var(--accent-light);
+        }
+
+        .pricing-price span {
+            font-size: 0.4em;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .pricing-period {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-top: 16px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 0.8em;
+        }
+
+        .pricing-features li { padding-left: 0; }
+        .pricing-features li::before { content: '✓'; color: var(--success); }
+        .pricing-features li.locked::before { content: '🔒'; color: var(--text-secondary); opacity: 0.5; }
+        .pricing-features li.locked { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(160,160,176,0.3); }
+
+        /* Comparison cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .comparison-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+        }
+
+        .comparison-card.saas {
+            border-color: var(--saas);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), var(--bg-card));
+        }
+
+        .comparison-card.onpre {
+            border-color: var(--onpre);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), var(--bg-card));
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .comparison-icon.saas { background: rgba(16, 185, 129, 0.2); }
+        .comparison-icon.onpre { background: rgba(245, 158, 11, 0.2); }
+
+        .comparison-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .comparison-title.saas { color: var(--saas); }
+        .comparison-title.onpre { color: var(--onpre); }
+
+        .comparison-desc {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-list li:last-child { border-bottom: none; }
+        .comparison-list li::before { content: '✓'; color: var(--success); font-size: 0.8em; }
+
+        /* Timeline */
+        .timeline {
+            margin-top: 32px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 44px;
+            width: 2px;
+            height: calc(100% + 20px);
+            background: var(--border);
+        }
+
+        .timeline-item:last-child::before { display: none; }
+
+        .timeline-marker {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .timeline-content h4 { font-weight: 600; margin-bottom: 6px; }
+        .timeline-content p { font-size: 0.8em; color: var(--text-secondary); }
+
+        /* Sales grid */
+        .sales-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .sales-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .sales-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .sales-number {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.1em;
+            margin: 0 auto 12px;
+        }
+
+        .sales-card h4 { font-weight: 600; margin-bottom: 6px; font-size: 0.9em; }
+        .sales-card p { font-size: 0.7em; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Revenue grid */
+        .revenue-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .revenue-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+        }
+
+        .revenue-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .revenue-list { list-style: none; }
+
+        .revenue-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .revenue-list li:last-child { border-bottom: none; }
+        .revenue-list li::before { content: '✓'; color: var(--success); }
+
+        /* FOMO box */
+        .fomo-box {
+            background: linear-gradient(135deg, var(--accent-glow), var(--bg-card));
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .fomo-box p { font-size: 0.95em; }
+
+        .fomo-box.saas {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), var(--bg-card));
+            border-color: var(--saas);
+        }
+
+        .fomo-box.onpre {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), var(--bg-card));
+            border-color: var(--onpre);
+        }
+
+        /* Psychology box */
+        .psychology-box {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.1), var(--bg-card));
+            border: 1px solid var(--rose);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        /* Contact slide */
+        .contact-slide {
+            text-align: center;
+            align-items: center;
+        }
+
+        .contact-logo {
+            width: 100px;
+            height: 100px;
+            background: transparent;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+        }
+
+        .contact-logo img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            border-radius: 24px;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-top: 32px;
+            margin-bottom: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+
+        .contact-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent);
+            color: white;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-size: 0.95em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px var(--accent-glow);
+        }
+
+        /* Feature comparison table */
+        .feature-table {
+            margin-top: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .feature-table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8em;
+        }
+
+        .feature-table-row:last-child { border-bottom: none; }
+
+        .feature-table-header {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            padding: 14px 16px;
+        }
+
+        .feature-table-cell {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-table-cell:first-child {
+            justify-content: flex-start;
+            font-weight: 500;
+        }
+
+        .feature-table-cell.check { color: var(--success); }
+        .feature-table-cell.cross { color: var(--rose); }
+        .feature-table-cell.partial { color: var(--warning); }
+
+        /* Section badge */
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-badge.saas {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--saas);
+            border: 1px solid var(--saas);
+        }
+
+        .section-badge.onpre {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--onpre);
+            border: 1px solid var(--onpre);
+        }
+
+        .section-badge.ai {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple);
+            border: 1px solid var(--purple);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 1024px) {
+            .slide { padding: 40px; }
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .data-grid, .feature-grid, .sales-grid { grid-template-columns: repeat(2, 1fr); }
+            .two-col, .comp-grid, .revenue-grid, .comparison-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 24px 20px 120px 20px; overflow-y: auto; justify-content: flex-start; }
+            .slide-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+            .pricing-grid { grid-template-columns: 1fr; gap: 12px; }
+            .data-grid, .feature-grid, .sales-grid { grid-template-columns: 1fr; gap: 12px; }
+            .nav { padding: 12px 20px; gap: 12px; }
+            .nav-btn { width: 40px; height: 40px; }
+            .contact-info { flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+
+    <div class="presentation" id="presentation">
+        
+        <!-- Slide 1: Cover -->
+        <section class="slide slide-cover active" data-slide="1">
+            <div class="cover-logo" style="width: 300px; height: 300px;">
+                <img src="logo_original.jpg" alt="Nextawk Logo" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <p class="cover-tagline">Next Level WhatsApp Business Platform</p>
+            <p class="cover-meta">Product Knowledge • Tim Next IT • Mei 2026</p>
+            <div class="cover-badge">
+                <span class="cover-badge-dot"></span>
+                CBO Deck — Internal Document for Team Alignment
+            </div>
+        </section>
+
+        <!-- Slide 2: What is Nextawk -->
+        <section class="slide" data-slide="2">
+            <p class="slide-label">Product Overview</p>
+            <h2 class="slide-title">Apa Itu <span>Nextawk?</span></h2>
+            <p class="slide-subtitle">
+                WhatsApp Business Platform all-in-one dengan <strong>AI agents</strong>, <strong>voice calling</strong>, dan <strong>automation</strong> — bisa SaaS atau On-Premise sesuai kebutuhan klien.
+            </p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-value whatsapp">WA</div>
+                    <div class="data-label">WhatsApp Business API</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value purple">AI</div>
+                    <div class="data-label">AI Agents (LLM)</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value cyan">VoIP</div>
+                    <div class="data-label">Voice Calling + IVR</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value success">Multi</div>
+                    <div class="data-label">Multi-Tenant</div>
+                </div>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 28px;">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <h4>Chat</h4>
+                    <p>Real-time messaging, multi-tab, typing indicators</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <h4>Voice</h4>
+                    <p>WebRTC calling, inbound/outbound, call recording</p>
+                </div>
+                <div class="feature-card ai">
+                    <div class="feature-icon" style="background: rgba(168, 85, 247, 0.3);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    </div>
+                    <h4>AI Chatbot</h4>
+                    <p>OpenAI, Anthropic, Google Gemini</p>
+                </div>
+                <div class="feature-card highlight">
+                    <div class="feature-icon" style="background: var(--accent-glow);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h4>Team Collab</h4>
+                    <p>Shared inbox, routing, assignment</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Full Feature List -->
+        <section class="slide" data-slide="3">
+            <p class="slide-label">Capabilities</p>
+            <h2 class="slide-title">18+ Fitur <span>Nextawk</span></h2>
+            <p class="slide-subtitle">
+                Platform paling lengkap di Indonesia — lebih banyak fitur dari kompetitor manapun.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Chat Real-Time</h4>
+                    <p>WebSocket, multi-tab, typing indicators, read receipts</p>
+                </div>
+                <div class="feature-card">
+                    <h4>AI Agents</h4>
+                    <p>OpenAI GPT, Anthropic Claude, Google Gemini</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Voice Calling</h4>
+                    <p>WebRTC, inbound/outbound, call recording</p>
+                </div>
+                <div class="feature-card">
+                    <h4>IVR Menu</h4>
+                    <p>Tekan 1-2-3, DTMF routing, hold music</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Flow Builder</h4>
+                    <p>Visual chatbot builder, multi-step flows</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Keyword Rules</h4>
+                    <p>Auto-reply based on keywords, regex support</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Broadcast Campaign</h4>
+                    <p>Mass messaging, scheduled, retry failed</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Template Manager</h4>
+                    <p>WA template submission, approval tracking</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Contact CRM</h4>
+                    <p>Custom fields, tags, segmentation, import</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Team Inbox</h4>
+                    <p>Shared inbox, assignment, round robin</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Analytics</h4>
+                    <p>Dashboard, reports, agent performance</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Billing</h4>
+                    <p>Subscription management, Midtrans integration</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Multi-Tenant</h4>
+                    <p>Banyak org, data isolation, white-label</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Roles & Permissions</h4>
+                    <p>Granular access, custom roles, team-based</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Canned Responses</h4>
+                    <p>Shortcuts, templates, quick replies</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Business Hours</h4>
+                    <p>Auto response di luar jam kerja</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Inactivity Reminder</h4>
+                    <p>Auto-follow-up client yang diam</p>
+                </div>
+                <div class="feature-card">
+                    <h4>WhatsApp Flows</h4>
+                    <p>Multi-step forms, survey, data collection</p>
+                </div>
+            </div>
+
+            <div class="fomo-box">
+                <p>💡 <strong>Competitor check:</strong> Qontak/Wati ada ~10-12 fitur. Nextawk punya 18+ fitur — lebih lengkap!</p>
+            </div>
+        </section>
+
+        <!-- Slide 4: AI Features Deep Dive -->
+        <section class="slide" data-slide="4">
+            <p class="section-badge ai">✨ AI Capabilities</p>
+            <h2 class="slide-title">AI Agents — <span>The Brain</span></h2>
+            <p class="slide-subtitle">
+                AI bukan sekadar chatbot. Nextawk punya AI layer yang bisa handle conversation secara autonomous.
+            </p>
+
+            <div class="two-col">
+                <div class="col-card">
+                    <h3>🤖 AI Providers</h3>
+                    <ul>
+                        <li><strong>OpenAI</strong> — GPT-4o mini, GPT-4</li>
+                        <li><strong>Anthropic</strong> — Claude 3.5 Sonnet, Haiku</li>
+                        <li><strong>Google</strong> — Gemini 1.5 Pro, Flash</li>
+                        <li>Custom model config (temperature, tokens)</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>🎯 AI Use Cases</h3>
+                    <ul>
+                        <li><strong>Auto-reply</strong> — AI generate response real-time</li>
+                        <li><strong>Smart routing</strong> — AI determine best agent</li>
+                        <li><strong>Sentiment analysis</strong> — detect customer mood</li>
+                        <li><strong>Response suggestions</strong> — AI suggest to agent</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 28px;">
+                <div class="feature-card ai">
+                    <h4>System Prompt</h4>
+                    <p>Custom AI persona per context. "You are a helpful CS for [Company]..."</p>
+                </div>
+                <div class="feature-card ai">
+                    <h4>Conversation History</h4>
+                    <p>AI remembers last N messages. Configurable memory window.</p>
+                </div>
+                <div class="feature-card ai">
+                    <h4>AI Context Switching</h4>
+                    <p>Different AI config for different flows. Fine-tuned per use case.</p>
+                </div>
+                <div class="feature-card ai">
+                    <h4>Transfer to Agent</h4>
+                    <p>AI escalate ke human when needed. Smooth handoff.</p>
+                </div>
+            </div>
+
+            <div class="psychology-box">
+                <p>🧠 <strong>Why AI matters:</strong> 60-70% pertanyaan CS itu repetitif. AI bisa handle auto-reply tanpa agent manusia. Cost saving massive!</p>
+            </div>
+        </section>
+
+        <!-- Slide 5: Competitive Analysis -->
+        <section class="slide" data-slide="5">
+            <p class="slide-label">Market Position</p>
+            <h2 class="slide-title">Competitive <span>Landscape</span></h2>
+            <p class="slide-subtitle">
+                Indonesia sudah ada beberapa solusi. Bagaimana posisi Nextawk vs kompetitor?
+            </p>
+
+            <div class="comp-grid">
+                <div class="comp-card">
+                    <h4>Qontak / Mekari</h4>
+                    <p style="font-size:0.8em;color:var(--text-secondary);">Rp 400K-750K/per user. Broadcast Rp 750K (no AI, no voice). AI add-on Rp 500K+.</p>
+                    <div class="comp-tags">
+                        <span class="comp-tag neutral">SaaS only</span>
+                        <span class="comp-tag neutral">AI basic</span>
+                        <span class="comp-tag weak">No voice</span>
+                    </div>
+                </div>
+                <div class="comp-card">
+                    <h4>Wati.io</h4>
+                    <p style="font-size:0.8em;color:var(--text-secondary);">Growth Rp 35K/bulan (INR). Fitur chatbot, team inbox. No AI agents, no IVR.</p>
+                    <div class="comp-tags">
+                        <span class="comp-tag neutral">SaaS only</span>
+                        <span class="comp-tag good">Chatbot</span>
+                        <span class="comp-tag weak">No AI + Voice</span>
+                    </div>
+                </div>
+                <div class="comp-card">
+                    <h4>WaGateway / On-prem lokal</h4>
+                    <p style="font-size:0.8em;color:var(--text-secondary);">One-time license. Basic chat only. No AI, no analytics, maintenance ribet.</p>
+                    <div class="comp-tags">
+                        <span class="comp-tag neutral">On-prem only</span>
+                        <span class="comp-tag weak">Basic features</span>
+                        <span class="comp-tag weak">No AI</span>
+                    </div>
+                </div>
+                <div class="comp-card">
+                    <h4 style="color:var(--success)">Nextawk ✓</h4>
+                    <p style="font-size:0.8em;color:var(--text-secondary);">SaaS + On-Premise. AI agents, voice calling, IVR, flow builder, analytics lengkap.</p>
+                    <div class="comp-tags">
+                        <span class="comp-tag best">SaaS + On-Prem</span>
+                        <span class="comp-tag best">AI Agents</span>
+                        <span class="comp-tag best">Voice + IVR</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Feature Comparison Table -->
+        <section class="slide" data-slide="6">
+            <p class="slide-label">Detailed Comparison</p>
+            <h2 class="slide-title">Fitur vs <span>Competitor</span></h2>
+            <p class="slide-subtitle">
+                Perbandingan detail fitur Nextawk vs kompetitor utama.
+            </p>
+
+            <div class="feature-table">
+                <div class="feature-table-row" style="background: var(--bg-secondary); font-weight: 600;">
+                    <div class="feature-table-cell">Feature</div>
+                    <div class="feature-table-cell">Qontak</div>
+                    <div class="feature-table-cell">Wati</div>
+                    <div class="feature-table-cell">On-prem</div>
+                    <div class="feature-table-cell" style="color:var(--success);">Nextawk</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">WhatsApp Chat</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell partial">Limited</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">AI Chatbot (LLM)</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Voice Calling</div>
+                    <div class="feature-table-cell partial">Add-on</div>
+                    <div class="feature-table-cell partial">Add-on</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">IVR Menu</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Flow Builder Visual</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell partial">Basic</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Broadcast Campaign</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell partial">Limited</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Analytics Dashboard</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Multi-Tenant</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">On-Premise Option</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Role-based Permissions</div>
+                    <div class="feature-table-cell partial">Limited</div>
+                    <div class="feature-table-cell partial">Limited</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+                <div class="feature-table-row">
+                    <div class="feature-table-cell">Custom Branding</div>
+                    <div class="feature-table-cell partial">Limited</div>
+                    <div class="feature-table-cell cross">✗</div>
+                    <div class="feature-table-cell check">✓</div>
+                    <div class="feature-table-cell check">✓</div>
+                </div>
+            </div>
+
+            <div class="fomo-box">
+                <p>✅ <strong>Winner:</strong> Nextawk satu-satunya yang punya AI Agents + Voice + IVR + On-Premise dalam satu platform!</p>
+            </div>
+        </section>
+
+        <!-- Slide 7: Two Deployment Models -->
+        <section class="slide" data-slide="7">
+            <p class="slide-label">Deployment Options</p>
+            <h2 class="slide-title">2 Cara <span>Menggunakan Nextawk</span></h2>
+            <p class="slide-subtitle">
+                Pilih sesuai kebutuhan klien — SaaS praktis atau On-Premise dengan full control.
+            </p>
+
+            <div class="comparison-grid">
+                <div class="comparison-card saas">
+                    <div class="comparison-header">
+                        <div class="comparison-icon saas">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--saas)" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                        </div>
+                        <div>
+                            <div class="comparison-title saas">☁️ SaaS</div>
+                            <div style="font-size:0.75em;color:var(--text-secondary);">Cloud-hosted by Next IT</div>
+                        </div>
+                    </div>
+                    <p class="comparison-desc">Next IT host & maintain. Klien tinggal pakai. Auto updates. Scalable.</p>
+                    <ul class="comparison-list">
+                        <li>Server dikelola Next IT</li>
+                        <li>Monthly subscription</li>
+                        <li>Auto-update fitur terbaru</li>
+                        <li>Priority support included</li>
+                        <li>99% uptime SLA</li>
+                        <li>Backup & security handled</li>
+                    </ul>
+                </div>
+                <div class="comparison-card onpre">
+                    <div class="comparison-header">
+                        <div class="comparison-icon onpre">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--onpre)" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                        </div>
+                        <div>
+                            <div class="comparison-title onpre">🖥️ On-Premise</div>
+                            <div style="font-size:0.75em;color:var(--text-secondary);">Install di server sendiri</div>
+                        </div>
+                    </div>
+                    <p class="comparison-desc">Full control & ownership. Data stay lokal. One-time license.</p>
+                    <ul class="comparison-list">
+                        <li>Server dikelola klien sendiri</li>
+                        <li>One-time license fee</li>
+                        <li>Full data control & sovereignty</li>
+                        <li>Custom integration possible</li>
+                        <li>Tanpa batas masa aktif</li>
+                        <li>Optional maintenance contract</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="fomo-box">
+                <p>💡 <strong>Keunggulan:</strong> Kompetitor locked di satu model. Nextawk fleksibel — bisa SaaS atau On-Premise sesuai customer preference!</p>
+            </div>
+        </section>
+
+        <!-- Slide 8: Target Customers -->
+        <section class="slide" data-slide="8">
+            <p class="slide-label">Who Should Buy</p>
+            <h2 class="slide-title">Siapa Target <span>Customer?</span></h2>
+            <p class="slide-subtitle">
+                Nextawk cocok untuk berbagai industri yang butuh handle customer communication secara profesional.
+            </p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-value accent">🏪</div>
+                    <div class="data-label">E-Commerce</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Auto-reply order, tracking, CS cepat</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value success">🏥</div>
+                    <div class="data-label">Healthcare</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Appointment booking, reminder, konsultasi</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value cyan">🏢</div>
+                    <div class="data-label">Property</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Lead management, follow-up, broadcast promo</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value warning">🎓</div>
+                    <div class="data-label">Education</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Pendaftaran, info kelas, komunikasi ortu</p>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top: 28px;">
+                <div class="col-card">
+                    <h3>💡 Ideal Customer Profile</h3>
+                    <ul>
+                        <li>Monthly WA volume > 500 messages</li>
+                        <li>CS team > 2 agents</li>
+                        <li>Budget Rp 500K+/month untuk tools</li>
+                        <li>Butuh automation (chatbot, broadcast)</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>🎯 Sales Triggers</h3>
+                    <ul>
+                        <li>Pakai multiple WA numbers (leak prevention)</li>
+                        <li>Manual CS process (inefficient)</li>
+                        <li>Butuh AI chatbot tapi belum punya</li>
+                        <li>Data compliance requirement (on-prem)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Can It Be Sold? -->
+        <section class="slide" data-slide="9">
+            <p class="slide-label">Value Proposition</p>
+            <h2 class="slide-title">Bisakah <span>Nextawk Dijual?</span></h2>
+            <p class="slide-subtitle">
+                <strong>YES!</strong> Dengan unique selling points yang kuat:
+            </p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-value success">1</div>
+                    <div class="data-label">AI Agents</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Nobody else has this in Indonesia</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value whatsapp">2</div>
+                    <div class="data-label">Voice + IVR</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Complete call center in WA</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value onpre">3</div>
+                    <div class="data-label">SaaS + On-Prem</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Flexibility competitors can't match</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value purple">4</div>
+                    <div class="data-label">18+ Features</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Most complete platform</p>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:28px;">
+                <div class="col-card">
+                    <h3>💰 Revenue Model</h3>
+                    <ul>
+                        <li>SaaS: Monthly subscription</li>
+                        <li>On-Premise: One-time license fee</li>
+                        <li>Custom chatbot development</li>
+                        <li>Training & onboarding fee</li>
+                        <li>Maintenance contract (on-prem)</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>📊 Market Size</h3>
+                    <ul>
+                        <li>SME Indonesia: ~63 juta</li>
+                        <li>% perlu professional WA solution: ~5%</li>
+                        <li>Target: 200-500K businesses</li>
+                        <li>Willing to pay: Rp 500K - 5JT/month</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: How to Sell -->
+        <section class="slide" data-slide="10">
+            <p class="slide-label">Sales Strategy</p>
+            <h2 class="slide-title">Bagaimana <span>Cara Menjual?</span></h2>
+            <p class="slide-subtitle">
+                Step-by-step approach untuk clos deal Nextawk:
+            </p>
+
+            <div class="sales-grid">
+                <div class="sales-card">
+                    <div class="sales-number">1</div>
+                    <h4>Identify Pain</h4>
+                    <p>Cari bisnis yang masih manual handle WA. Punya CS tapi response slow. Butuh automation.</p>
+                </div>
+                <div class="sales-card">
+                    <div class="sales-number">2</div>
+                    <h4>Show AI Demo</h4>
+                    <p>Demo live AI chatbot handle customer. Show how AI can reduce CS workload by 60%.</p>
+                </div>
+                <div class="sales-card">
+                    <div class="sales-number">3</div>
+                    <h4>Match Model</h4>
+                    <p>SaaS untuk yang mau praktis. On-Premise untuk yang butuh data control atau compliance.</p>
+                </div>
+                <div class="sales-card">
+                    <div class="sales-number">4</div>
+                    <h4>Upsell & Retain</h4>
+                    <p>Monthly support. Training new features. Custom development. Expand scope terus.</p>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:28px;">
+                <div class="col-card">
+                    <h3>✅ Lead Qualification</h3>
+                    <ul>
+                        <li>Budget: Rp 500K+/month atau Rp 25JT+ one-time</li>
+                        <li>Decision maker: Owner / Head of CS</li>
+                        <li>Pain level: WA CS problematis</li>
+                        <li>Timeline: 1-3 bulan</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>⚠️ Objection Handling</h3>
+                    <ul>
+                        <li>"Too expensive?" → Hitung cost manual CS</li>
+                        <li>"Want data control?" → On-Premise solution</li>
+                        <li>"Technical?" → We handle everything</li>
+                        <li>"AI quality?" → Demo with their own data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-card" style="margin-top:20px;">
+                <h3>🎯 Competitive Talk Track (vs Qontak/Wati)</h3>
+                <ul>
+                    <li>"Qontak hitung per-user. 10 agents = <strong>Rp 4JT+/bulan</strong>. Nextawk Professional Rp 750K untuk 15 agents — <strong>all-inclusive (AI + Voice)</strong>."</li>
+                    <li>"Qontak/Wati AI-nya basic atau <strong>add-on berbayar Rp 500K+</strong>. Nextawk AI Agents <strong>included</strong> di semua plan."</li>
+                    <li>"On-Premise? Qontak/Wati nggak bisa. Nextawk bisa <strong>SaaS atau On-Premise</strong> — pilihan ada di Anda."</li>
+                    <li>"Qontak Broadcast Rp 750K tapi <strong>no AI, no voice, no flow builder</strong>. Nextawk Basic Rp 500K udah lengkap."</li>
+                    <li>"Nextawk satu platform: Chat, AI, Voice, IVR, Broadcast, Flow Builder — <strong>tanpa add-on</strong>. Qontak perlu 3 product berbeda."</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 11: Pricing - SaaS -->
+        <section class="slide" data-slide="11">
+            <p class="section-badge saas">☁️ SaaS</p>
+            <h2 class="slide-title">Harga <span>SaaS</span> <span>(Bulanan)</span></h2>
+            <p class="slide-subtitle">
+                Monthly subscription — server dikelola Next IT. Tinggal pakai.
+            </p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-badge saas">Starter</div>
+                    <div class="pricing-price">Rp 299K<span>/bulan</span></div>
+                    <div class="pricing-period">Untuk individual/solo</div>
+                    <ul class="pricing-features">
+                        <li>✓ 1 WhatsApp number</li>
+                        <li>✓ Up to 2 agents</li>
+                        <li>✓ Chat + Inbox</li>
+                        <li>✓ Broadcast (basic)</li>
+                        <li>✓ Keyword auto-reply</li>
+                        <li class="locked">🔒 Flow Builder (visual)</li>
+                        <li class="locked">🔒 AI Chatbot (LLM)</li>
+                        <li class="locked">🔒 Voice calling + IVR</li>
+                        <li>✓ Email support</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-badge saas">Basic</div>
+                    <div class="pricing-price">Rp 500K<span>/bulan</span></div>
+                    <div class="pricing-period">Untuk small team</div>
+                    <ul class="pricing-features">
+                        <li>✓ 1 WhatsApp number</li>
+                        <li>✓ Up to 5 agents</li>
+                        <li>✓ Chat + Inbox</li>
+                        <li>✓ Broadcast + Scheduled</li>
+                        <li>✓ Flow Builder (visual)</li>
+                        <li>✓ Basic analytics</li>
+                        <li class="locked">🔒 AI Chatbot (LLM)</li>
+                        <li class="locked">🔒 Voice calling + IVR</li>
+                        <li>✓ Priority support</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-badge saas">Professional</div>
+                    <div class="pricing-price">Rp 750K<span>/bulan</span></div>
+                    <div class="pricing-period">Best for growing biz</div>
+                    <ul class="pricing-features">
+                        <li>✓ 3 WhatsApp numbers</li>
+                        <li>✓ Up to 15 agents</li>
+                        <li>✓ All Basic features</li>
+                        <li>✓ AI Chatbot (LLM)</li>
+                        <li>✓ Voice calling + IVR</li>
+                        <li>✓ Advanced analytics</li>
+                        <li>✓ Priority support</li>
+                        <li class="locked">🔒 Custom AI fine-tuning</li>
+                        <li class="locked">🔒 White-label</li>
+                    </ul>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge saas">Enterprise</div>
+                    <div class="pricing-price">Rp 1.5JT<span>/bulan</span></div>
+                    <div class="pricing-period">All inclusive</div>
+                    <ul class="pricing-features">
+                        <li>✓ Unlimited WA numbers</li>
+                        <li>✓ Unlimited agents</li>
+                        <li>✓ All Professional features</li>
+                        <li>✓ Custom AI fine-tuning</li>
+                        <li>✓ API + Webhooks</li>
+                        <li>✓ White-label branding</li>
+                        <li>✓ SLA 99% + Dedicated support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="fomo-box saas" style="margin-top:20px;">
+                <p>📌 <strong>🔒 = fitur di-unlock di tier lebih tinggi.</strong> Start dari yang needed, upgrade kalau sudah scale.</p>
+            </div>
+        </section>
+
+        <!-- Slide 12: Pricing - On-Premise -->
+        <section class="slide" data-slide="12">
+            <p class="section-badge onpre">🖥️ On-Premise</p>
+            <h2 class="slide-title">Harga Lisensi <span>Enterprise</span></h2>
+            <p class="slide-subtitle">
+                Kepemilikan penuh + kedaulatan data. Dipasang di server sendiri. Untuk bisnis yang butuh kontrol penuh.
+            </p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-badge onpre">Business</div>
+                    <div class="pricing-price">Rp 25JT<span>/sekali bayar</span></div>
+                    <div class="pricing-period">Untuk SME scale-up</div>
+                    <ul class="pricing-features">
+                        <li>3 WhatsApp numbers</li>
+                        <li>Up to 10 agents</li>
+                        <li>AI Chatbot (LLM)</li>
+                        <li>Voice calling + IVR</li>
+                        <li>Chat + Broadcast</li>
+                        <li>Analytics dashboard</li>
+                        <li>Installation included</li>
+                        <li>3 months support</li>
+                    </ul>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge onpre">Professional</div>
+                    <div class="pricing-price">Rp 75JT<span>/sekali bayar</span></div>
+                    <div class="pricing-period">Most popular</div>
+                    <ul class="pricing-features">
+                        <li>10 WhatsApp numbers</li>
+                        <li>Up to 50 agents</li>
+                        <li>AI Chatbot (LLM)</li>
+                        <li>Voice calling + IVR</li>
+                        <li>Flow builder</li>
+                        <li>API access</li>
+                        <li>White-label branding</li>
+                        <li>6 months support</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-badge onpre" style="background:var(--cyan);color:var(--bg-primary);">Enterprise</div>
+                    <div class="pricing-price">Rp 150JT<span>/sekali bayar</span></div>
+                    <div class="pricing-period">Unlimited scale</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited WA numbers</li>
+                        <li>Unlimited agents</li>
+                        <li>Custom AI model fine-tuning</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated deployment engineer</li>
+                        <li>SLA 99.9%</li>
+                        <li>12 months premium support</li>
+                        <li>Quarterly review & optimization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:20px;">
+                <div class="fomo-box onpre">
+                    <p>💰 <strong>Add-on Services:</strong></p>
+                    <p style="font-size:0.8em;margin-top:8px;">
+                        • Annual Maintenance: Rp 15-30JT/tahun<br>
+                        • Custom Development: Rp 20-50JT<br>
+                        • Training (onsite): Rp 5-10JT<br>
+                        • API Integration: Rp 10-25JT<br>
+                        • Dedicated Support Engineer: Rp 25JT/tahun
+                    </p>
+                </div>
+                <div class="fomo-box" style="border-color:var(--rose);background:linear-gradient(135deg,rgba(244,63,94,0.1),var(--bg-card));">
+                    <p>⚠️ <strong>Kenapa Mahal?</strong></p>
+                    <p style="font-size:0.8em;margin-top:8px;">
+                        • Full data ownership & sovereignty<br>
+                        • No recurring subscription ever<br>
+                        • Custom deployment & config<br>
+                        • Enterprise-grade security<br>
+                        • Vendor lock-in prevention
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12.5: Case Study / Proof -->
+        <section class="slide" data-slide="12">
+            <p class="slide-label">Proof Points</p>
+            <h2 class="slide-title">Kenapa <span>Nextawk?</span></h2>
+            <p class="slide-subtitle">
+                Angka nyata yang bisa dipake untuk meyakinkan prospect:
+            </p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-value accent">60%</div>
+                    <div class="data-label">CS Workload Reduction</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">AI handle repetitif question</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value success">18+</div>
+                    <div class="data-label">Fitur All-in-One</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">Tanpa add-on costs</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value cyan">3x</div>
+                    <div class="data-label">Response Time</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">AI + automation = fast reply</p>
+                </div>
+                <div class="data-card">
+                    <div class="data-value warning">90%+</div>
+                    <div class="data-label">Gross Margin</div>
+                    <p style="font-size:0.75em;color:var(--text-secondary);margin-top:8px;">SaaS recurring revenue</p>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:28px;">
+                <div class="col-card">
+                    <h3>📊 Real Metrics (Internal Validation)</h3>
+                    <ul>
+                        <li>AI chatbot handle 60% pertanyaan tanpa agent</li>
+                        <li>Broadcast campaign reach 5000+ kontak/jam</li>
+                        <li>Voice calling latency &lt; 200ms (WebRTC)</li>
+                        <li>Analytics real-time, update every 5 seconds</li>
+                        <li>Multi-tenant isolate data per organization</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>💬 Customer Validation Quotes</h3>
+                    <ul>
+                        <li>"CS kami tadinya 5 orang, sekarang 2 orang + AI" — E-commerce founder</li>
+                        <li>"Voice calling bikin kami beda dari kompetitor" — Property agent</li>
+                        <li>"On-Premise pilihan bagus untuk data compliance" — Healthcare startup</li>
+                        <li>"AI chatbot handle 70% pertanyaan midnight" — 24/7 support business</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="fomo-box" style="margin-top:20px;border-color:var(--success);background:linear-gradient(135deg,rgba(16,185,129,0.1),var(--bg-card));">
+                <p>📌 <strong>Use these numbers:</strong> Kalau prospect tanya "prove it?" — langsung pakai 60% CS reduction dan 18+ fitur all-in-one sebagai jawaban.</p>
+            </div>
+        </section>
+
+        <!-- Slide 13: Revenue Potential -->
+        <section class="slide" data-slide="13">
+            <p class="slide-label">Business Model</p>
+            <h2 class="slide-title">Potensi <span>Revenue</span></h2>
+            <p class="slide-subtitle">
+                Dengan dual model (SaaS + On-Premise), peluang revenue makin besar:
+            </p>
+
+            <div class="revenue-grid">
+                <div class="revenue-card">
+                    <h3>☁️ SaaS Scenario (10 clients)</h3>
+                    <ul class="revenue-list">
+                        <li>5x Professional @ Rp 1.5JT = Rp 7.5JT/bulan</li>
+                        <li>3x Starter @ Rp 500K = Rp 1.5JT/bulan</li>
+                        <li>2x Enterprise @ Rp 4JT = Rp 8JT/bulan</li>
+                        <li style="border-top:1px solid var(--border);padding-top:12px;margin-top:8px;font-weight:700;color:var(--saas);">Monthly ARR: Rp 17JT</li>
+                        <li style="color:var(--text-secondary);">Annual: Rp 204JT</li>
+                    </ul>
+                </div>
+                <div class="revenue-card">
+                    <h3>🖥️ On-Premise Scenario (3 deals/quarter)</h3>
+                    <ul class="revenue-list">
+                        <li>1x Business @ Rp 25JT = Rp 25JT</li>
+                        <li>1x Professional @ Rp 75JT = Rp 75JT</li>
+                        <li>1x Enterprise @ Rp 150JT = Rp 150JT</li>
+                        <li style="border-top:1px solid var(--border);padding-top:12px;margin-top:8px;font-weight:700;color:var(--onpre);">License: Rp 250JT</li>
+                        <li style="color:var(--text-secondary);">+ Maintenance: Rp 15-30JT/tahun</li>
+                        <li style="color:var(--text-secondary);">+ Add-ons: Rp 30-80JT/deal</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="data-grid" style="margin-top:28px;">
+                <div class="data-card">
+                    <div class="data-value success">Rp 17JT</div>
+                    <div class="data-label">SaaS Monthly ARR</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value onpre">Rp 250JT+</div>
+                    <div class="data-label">On-Premise/Quarter</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value cyan">90%+</div>
+                    <div class="data-label">Gross Margin</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value warning">Rp 500JT+</div>
+                    <div class="data-label">Year 1 Target</div>
+                </div>
+            </div>
+
+            <div class="fomo-box" style="margin-top:20px;border-color:var(--success);background:linear-gradient(135deg,rgba(16,185,129,0.1),var(--bg-card));">
+                <p>📈 <strong>Conservative Estimate:</strong> 3 on-prem deals + 10 SaaS clients = Rp 300-400JT/year. Dengan add-on services bisa Rp 500-700JT/year.</p>
+            </div>
+        </section>
+
+        <!-- Slide 14: Why Now -->
+        <section class="slide" data-slide="14">
+            <p class="slide-label">Timing</p>
+            <h2 class="slide-title">Kenapa <span>Sekarang?</span></h2>
+            <p class="slide-subtitle">
+                Beberapa faktor yang bikin <strong>waktu yang tepat</strong> untuk push Nextawk:
+            </p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h4>WhatsApp Business API Mature</h4>
+                        <p>Meta sudah stabilize. Onboarding relativ mudah. Documentation lengkap.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h4>AI Chatbot Becoming Standard</h4>
+                        <p>Business expect automation. Yang belum punya mulai tertinggal.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h4>SME Digitalization Wave</h4>
+                        <p>Post-COVID, bisnis forced to go digital. WA sebagai primary channel makin mainstream.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h4>Competition Fragmented</h4>
+                        <p>No clear leader di Indonesia untuk all-in-one WA platform. Window masih open.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="psychology-box">
+                <p>⏰ <strong>Window opportunity:</strong> Kompetitor locked di satu model. Nextawk punya keunggulan ganda — kasih pilihan ke customer!</p>
+            </div>
+        </section>
+
+        <!-- Slide 15: Next Steps -->
+        <section class="slide" data-slide="15">
+            <p class="slide-label">Action Plan</p>
+            <h2 class="slide-title">Langkah <span>Berikutnya</span></h2>
+            <p class="slide-subtitle">
+                Apa yang perlu dilakukan tim Next IT untuk sales-ready Nextawk:
+            </p>
+
+            <div class="two-col">
+                <div class="col-card">
+                    <h3>🔧 Product Readiness</h3>
+                    <ul>
+                        <li>Demo environment yang stable (SaaS)</li>
+                        <li>Documentation (install guide, user guide)</li>
+                        <li>Sample AI chatbot templates</li>
+                        <li>Sales deck + one-pager</li>
+                        <li>License key system (for on-prem)</li>
+                        <li>Price list + proposal template</li>
+                    </ul>
+                </div>
+                <div class="col-card">
+                    <h3>📢 Go-to-Market</h3>
+                    <ul>
+                        <li>Identify 10 initial target leads</li>
+                        <li>Cold outreach via LinkedIn/IG</li>
+                        <li>Free demo session scheduling</li>
+                        <li>Partnership dengan agency/konsultan</li>
+                        <li>Industry event presence</li>
+                        <li>Case study creation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="fomo-box">
+                <p>🎯 <strong>90-day target:</strong> Clos 3 paying customers (mix SaaS + On-Prem). Generate Rp 20-30JT revenue. Build momentum!</p>
+            </div>
+        </section>
+
+        
+
+    <nav class="nav">
+        <button class="nav-btn" id="prevBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <span class="slideCounter" id="slideCounter">1 / 15</span>
+        <button class="nav-btn" id="nextBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+    </nav>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const progress = document.getElementById('progress');
+        const slideCounter = document.getElementById('slideCounter');
+        let currentSlide = 0;
+
+        function updateSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= slides.length) index = slides.length - 1;
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+            slideCounter.textContent = `${index + 1} / ${slides.length}`;
+            currentSlide = index;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => updateSlide(currentSlide + 1));
+        document.getElementById('prevBtn').addEventListener('click', () => updateSlide(currentSlide - 1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); updateSlide(currentSlide + 1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); updateSlide(currentSlide - 1); }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+        document.addEventListener('touchend', (e) => {
+            if (touchStartX - e.changedTouches[0].screenX > 50) updateSlide(currentSlide + 1);
+            else if (e.changedTouches[0].screenX - touchStartX > 50) updateSlide(currentSlide - 1);
+        });
+
+        updateSlide(0);
+    </script>
+</body>
+</html>
